@@ -56,3 +56,36 @@ class DoorbellListener:
         if self._transport is not None:
             self._transport.close()
             self._transport = None
+
+
+class _DiscoveryProtocol(asyncio.DatagramProtocol):
+    def __init__(self, future: asyncio.Future, exclude: set[str]) -> None:
+        self._future = future
+        self._exclude = exclude
+
+    def datagram_received(self, data: bytes, addr) -> None:
+        ip = addr[0]
+        if ip not in self._exclude and not self._future.done():
+            self._future.set_result(ip)
+
+
+async def async_wait_for_doorbell(exclude: set[str], timeout: float) -> str:
+    """Return the IP of the first doorbell that broadcasts a press.
+
+    Uses its own socket (reuse_port), so it works whether or not the
+    integration is already running for another doorbell.
+    Raises TimeoutError if nothing arrives in time.
+    """
+    loop = asyncio.get_running_loop()
+    future: asyncio.Future[str] = loop.create_future()
+    transport, _ = await loop.create_datagram_endpoint(
+        lambda: _DiscoveryProtocol(future, exclude),
+        local_addr=("0.0.0.0", UDP_PORT),
+        allow_broadcast=True,
+        reuse_port=True,
+    )
+    try:
+        async with asyncio.timeout(timeout):
+            return await future
+    finally:
+        transport.close()

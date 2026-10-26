@@ -27,7 +27,7 @@ from .listener import DoorbellListener
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [Platform.EVENT, Platform.BINARY_SENSOR]
+PLATFORMS = [Platform.EVENT, Platform.BINARY_SENSOR, Platform.IMAGE]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

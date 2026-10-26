@@ -3,20 +3,74 @@
     "step": {
       "user": {
         "title": "Tapo doorbell",
-        "description": "IP address of the doorbell. Home Assistant must be on the same network/VLAN, because presses arrive as a UDP broadcast on port 20005.",
+        "description": "How do you want to add the doorbell?",
+        "menu_options": {
+          "discover": "Find it: I'll press the doorbell",
+          "manual": "Enter the IP address myself"
+        }
+      },
+      "not_found": {
+        "title": "No doorbell found",
+        "description": "No press came in. Check that Home Assistant is on the same network/VLAN as the doorbell (a VM needs a bridged network adapter) and that UDP port 20005 is not blocked.",
+        "menu_options": {
+          "discover": "Try again",
+          "manual": "Enter the IP address myself"
+        }
+      },
+      "found": {
+        "title": "Doorbell found",
+        "description": "Found a doorbell at {host}. Tip: give it a fixed IP in your router.",
+        "data": { "name": "Name" }
+      },
+      "manual": {
+        "title": "Tapo doorbell",
+        "description": "Home Assistant must be on the same network/VLAN, because presses arrive as a UDP broadcast on port 20005.",
         "data": { "host": "IP address", "name": "Name" }
+      },
+      "camera": {
+        "title": "Photo on ring (optional)",
+        "description": "Fill in the camera account to get a photo at every press. Create it in the Tapo app: doorbell → Settings → Advanced settings → Camera account. This is NOT your TP-Link login. Leave empty to skip.",
+        "data": {
+          "username": "Camera account username",
+          "password": "Camera account password",
+          "stream": "Quality"
+        }
       }
     },
-    "error": { "invalid_ip": "Not a valid IP address" },
+    "progress": {
+      "wait_press": "Press the doorbell button now. Waiting up to {timeout} seconds…"
+    },
+    "error": {
+      "invalid_ip": "Not a valid IP address",
+      "incomplete_credentials": "Fill in both username and password, or leave both empty",
+      "cannot_snapshot": "Could not get a photo. Check the camera account and that RTSP (port 554) is reachable."
+    },
     "abort": { "already_configured": "This doorbell is already set up" }
   },
   "options": {
     "step": {
       "init": {
+        "title": "Doorbell settings",
+        "description": "Leave the camera account empty to turn photos off.",
         "data": {
+          "username": "Camera account username",
+          "password": "Camera account password",
+          "stream": "Quality",
           "cooldown": "Ignore repeat packets for (seconds)",
           "pulse": "Keep 'pressed' sensor on for (seconds)"
         }
+      }
+    },
+    "error": {
+      "incomplete_credentials": "Fill in both username and password, or leave both empty",
+      "cannot_snapshot": "Could not get a photo. Check the camera account and that RTSP (port 554) is reachable."
+    }
+  },
+  "selector": {
+    "stream": {
+      "options": {
+        "stream1": "High (sharp, slightly slower)",
+        "stream2": "Low (fast)"
       }
     }
   },
@@ -27,6 +81,7 @@
         "state_attributes": { "event_type": { "state": { "ring": "Ring" } } }
       }
     },
-    "binary_sensor": { "pressed": { "name": "Pressed" } }
+    "binary_sensor": { "pressed": { "name": "Pressed" } },
+    "image": { "visitor": { "name": "Visitor" } }
   }
 }

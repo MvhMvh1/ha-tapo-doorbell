@@ -3,20 +3,74 @@
     "step": {
       "user": {
         "title": "Tapo-deurbel",
-        "description": "IP-adres van de deurbel. Home Assistant moet in hetzelfde netwerk/VLAN zitten: een druk op de knop komt binnen als UDP-broadcast op poort 20005.",
+        "description": "Hoe wil je de deurbel toevoegen?",
+        "menu_options": {
+          "discover": "Zoeken: ik druk op de deurbel",
+          "manual": "Zelf het IP-adres invullen"
+        }
+      },
+      "not_found": {
+        "title": "Geen deurbel gevonden",
+        "description": "Er kwam geen druk binnen. Controleer of Home Assistant in hetzelfde netwerk/VLAN zit als de deurbel (bij een VM: netwerkadapter in bridged-modus) en of UDP-poort 20005 niet geblokkeerd is.",
+        "menu_options": {
+          "discover": "Opnieuw proberen",
+          "manual": "Zelf het IP-adres invullen"
+        }
+      },
+      "found": {
+        "title": "Deurbel gevonden",
+        "description": "Deurbel gevonden op {host}. Tip: geef hem een vast IP-adres in je router.",
+        "data": { "name": "Naam" }
+      },
+      "manual": {
+        "title": "Tapo-deurbel",
+        "description": "Home Assistant moet in hetzelfde netwerk/VLAN zitten: een druk op de knop komt binnen als UDP-broadcast op poort 20005.",
         "data": { "host": "IP-adres", "name": "Naam" }
+      },
+      "camera": {
+        "title": "Foto bij aanbellen (optioneel)",
+        "description": "Vul het camera-account in om bij elke druk een foto te krijgen. Maak het aan in de Tapo-app: deurbel → Instellingen → Geavanceerde instellingen → Camera-account. Dit is NIET je TP-Link-login. Laat leeg om over te slaan.",
+        "data": {
+          "username": "Gebruikersnaam camera-account",
+          "password": "Wachtwoord camera-account",
+          "stream": "Kwaliteit"
+        }
       }
     },
-    "error": { "invalid_ip": "Geen geldig IP-adres" },
+    "progress": {
+      "wait_press": "Druk nu op de knop van de deurbel. Ik wacht maximaal {timeout} seconden…"
+    },
+    "error": {
+      "invalid_ip": "Geen geldig IP-adres",
+      "incomplete_credentials": "Vul zowel gebruikersnaam als wachtwoord in, of laat beide leeg",
+      "cannot_snapshot": "Geen foto gekregen. Controleer het camera-account en of RTSP (poort 554) bereikbaar is."
+    },
     "abort": { "already_configured": "Deze deurbel is al ingesteld" }
   },
   "options": {
     "step": {
       "init": {
+        "title": "Deurbel-instellingen",
+        "description": "Laat het camera-account leeg om foto's uit te zetten.",
         "data": {
+          "username": "Gebruikersnaam camera-account",
+          "password": "Wachtwoord camera-account",
+          "stream": "Kwaliteit",
           "cooldown": "Herhaalde pakketten negeren gedurende (seconden)",
           "pulse": "Sensor 'Ingedrukt' aan houden gedurende (seconden)"
         }
+      }
+    },
+    "error": {
+      "incomplete_credentials": "Vul zowel gebruikersnaam als wachtwoord in, of laat beide leeg",
+      "cannot_snapshot": "Geen foto gekregen. Controleer het camera-account en of RTSP (poort 554) bereikbaar is."
+    }
+  },
+  "selector": {
+    "stream": {
+      "options": {
+        "stream1": "Hoog (scherp, iets trager)",
+        "stream2": "Laag (snel)"
       }
     }
   },
@@ -27,6 +81,7 @@
         "state_attributes": { "event_type": { "state": { "ring": "Gebeld" } } }
       }
     },
-    "binary_sensor": { "pressed": { "name": "Ingedrukt" } }
+    "binary_sensor": { "pressed": { "name": "Ingedrukt" } },
+    "image": { "visitor": { "name": "Bezoeker" } }
   }
 }
