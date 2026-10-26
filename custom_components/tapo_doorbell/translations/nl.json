@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tapo-deurbel",
+        "description": "IP-adres van de deurbel. Home Assistant moet in hetzelfde netwerk/VLAN zitten: een druk op de knop komt binnen als UDP-broadcast op poort 20005.",
+        "data": { "host": "IP-adres", "name": "Naam" }
+      }
+    },
+    "error": { "invalid_ip": "Geen geldig IP-adres" },
+    "abort": { "already_configured": "Deze deurbel is al ingesteld" }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "cooldown": "Herhaalde pakketten negeren gedurende (seconden)",
+          "pulse": "Sensor 'Ingedrukt' aan houden gedurende (seconden)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "event": {
+      "doorbell": {
+        "name": "Deurbel",
+        "state_attributes": { "event_type": { "state": { "ring": "Gebeld" } } }
+      }
+    },
+    "binary_sensor": { "pressed": { "name": "Ingedrukt" } }
+  }
+}

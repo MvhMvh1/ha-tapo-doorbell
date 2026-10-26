@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tapo doorbell",
+        "description": "IP address of the doorbell. Home Assistant must be on the same network/VLAN, because presses arrive as a UDP broadcast on port 20005.",
+        "data": { "host": "IP address", "name": "Name" }
+      }
+    },
+    "error": { "invalid_ip": "Not a valid IP address" },
+    "abort": { "already_configured": "This doorbell is already set up" }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "cooldown": "Ignore repeat packets for (seconds)",
+          "pulse": "Keep 'pressed' sensor on for (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "event": {
+      "doorbell": {
+        "name": "Doorbell",
+        "state_attributes": { "event_type": { "state": { "ring": "Ring" } } }
+      }
+    },
+    "binary_sensor": { "pressed": { "name": "Pressed" } }
+  }
+}
